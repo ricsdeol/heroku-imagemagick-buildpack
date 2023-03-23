@@ -1,4 +1,4 @@
-FROM heroku/heroku:22-build
+FROM heroku/heroku:20-build
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -6,7 +6,7 @@ ARG COMPILE_VERSION_LIBDE265=1.0.9
 ARG COMPILE_VERSION_LIBAOM=3.5.0
 ARG COMPILE_VERSION_LIBHEIF=1.14.0
 ARG COMPILE_VERSION_LIBWEBP=1.2.4
-ARG COMPILE_VERSION_IMAGEMAGICK=7.1.0-53
+ARG COMPILE_VERSION_IMAGEMAGICK=6.9.11-60
 
 RUN apt-get -yq update \
   # Needed for libaom library cmake optimizations
@@ -48,8 +48,8 @@ RUN apt-get -yq update \
   && ldconfig /usr/local/lib \
   && cd .. \
   # Get, configure and install ImageMagick
-  && curl -sSL --retry 3 https://github.com/ImageMagick/ImageMagick/archive/refs/tags/$COMPILE_VERSION_IMAGEMAGICK.tar.gz | tar zx \
-  && cd ImageMagick-$COMPILE_VERSION_IMAGEMAGICK \
+  && curl -sSL --retry 3 https://github.com/ImageMagick/ImageMagick6/archive/refs/tags/$COMPILE_VERSION_IMAGEMAGICK.tar.gz | tar zx \
+  && cd ImageMagick6-$COMPILE_VERSION_IMAGEMAGICK \
   && ./configure --prefix=/usr/src/imagemagick --disable-docs --with-avif=yes --with-heic=yes --with-webp=yes --with-tiff=yes --with-openexr=no --with-x=no \
   && make -j$(nproc) \
   && make install \
