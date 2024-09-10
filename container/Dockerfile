@@ -6,7 +6,7 @@ ARG COMPILE_VERSION_LIBDE265=1.0.15
 ARG COMPILE_VERSION_LIBAOM=3.10.0
 ARG COMPILE_VERSION_LIBHEIF=1.18.2
 ARG COMPILE_VERSION_LIBWEBP=1.4.0
-ARG COMPILE_VERSION_IMAGEMAGICK=6.9.13-16
+ARG COMPILE_VERSION_IMAGEMAGICK=6.9.12-98
 
 RUN apt-get -yq update \
   # Needed for libaom library cmake optimizations
@@ -24,7 +24,7 @@ RUN apt-get -yq update \
 RUN curl -sSL --retry 3 http://storage.googleapis.com/downloads.webmproject.org/releases/webp/libwebp-$COMPILE_VERSION_LIBWEBP.tar.gz | tar zx \
   && cd libwebp-$COMPILE_VERSION_LIBWEBP \
   && ./autogen.sh \
-  && ./configure --enable-shared --enable-libwebpdecoder --enable-libwebpdemux --enable-libwebpmux --enable-static=no \
+  && ./configure --enable-shared --enable-libwebpdecoder --enable-libwebpdemux --enable-libwebpmux --enable-libsharpyuv --enable-static=no \
   && make -j$(nproc) \
   && make install \
   && ldconfig /usr/local/lib \
@@ -61,6 +61,8 @@ RUN cp /usr/local/lib/libaom.so.3 /usr/src/imagemagick/lib \
   && cp /usr/local/lib/libde265.so.0 /usr/src/imagemagick/lib \
   && cp /usr/local/lib/libheif.so.1 /usr/src/imagemagick/lib \
   && cp /usr/local/lib/libwebp.so.7 /usr/src/imagemagick/lib \
+  && cp /usr/local/lib/libsharpyuv.so.0 /usr/src/imagemagick/lib \
+
   # Clean up the build and get ready for packaging
   && cd /usr/src/imagemagick \
   && strip lib/*.a lib/lib*.so* \
